@@ -49,18 +49,25 @@ public abstract class AbstractWxApi2 implements WxApi2 {
 	protected String base = "https://api.weixin.qq.com/cgi-bin";
 	protected String openid;
 	protected String encodingAesKey;
+	protected String apikey;
+	protected String mchid;
+	protected String paynotifyurl;
+	
 	protected int retryTimes = 3;//默认access_token时效时重试次数
 	
 	protected PropertiesProxy conf;
 	protected String confKeyPrefix = "weixin.";
 
-	public AbstractWxApi2(String token, String appid, String appsecret, String openid, String encodingAesKey) {
+	public AbstractWxApi2(String token, String appid, String appsecret, String openid, String encodingAesKey, String apikey, String mchid, String paynotifyurl) {
 		this();
 		this.token = token;
 		this.appid = appid;
 		this.appsecret = appsecret;
 		this.openid = openid;
 		this.encodingAesKey = encodingAesKey;
+		this.apikey = apikey;
+		this.mchid = mchid;
+		this.paynotifyurl = paynotifyurl;
 	}
 	
 	public void init() {
@@ -74,6 +81,9 @@ public abstract class AbstractWxApi2 implements WxApi2 {
 		appsecret = conf.get(prefix + "appsecret");
 		openid = conf.get(prefix + "openid");
 		encodingAesKey = conf.get(prefix + "aes");
+		apikey = conf.get(prefix + "apikey");
+		mchid = conf.get(prefix + "mchid");
+		paynotifyurl = conf.get(prefix + "paynotifyurl");
 		return this;
 	}
 

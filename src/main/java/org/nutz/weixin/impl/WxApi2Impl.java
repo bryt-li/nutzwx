@@ -55,8 +55,11 @@ public class WxApi2Impl extends AbstractWxApi2 {
                       String appid,
                       String appsecret,
                       String openid,
-                      String encodingAesKey) {
-        super(token, appid, appsecret, openid, encodingAesKey);
+                      String encodingAesKey,
+                      String apikey,
+                      String mchid,
+                      String paynotifyurl) {
+        super(token, appid, appsecret, openid, encodingAesKey,apikey,mchid,paynotifyurl);
     }
 
     // ===============================
@@ -654,7 +657,9 @@ public class WxApi2Impl extends AbstractWxApi2 {
         Request req = Request.create(url, METHOD.POST);
         req.setData(Xmls.mapToXml(params));
         Response resp = Sender.create(req).send();
-        if (!resp.isOK())
+
+        //这里微信支付服务器会返回201，不能用isOK=200来判断
+        if (resp.isServerError())
             throw new IllegalStateException("postPay, resp code=" + resp.getStatus());
         return Xmls.xmlToMap(resp.getContent("UTF-8"));
     }
@@ -788,4 +793,40 @@ public class WxApi2Impl extends AbstractWxApi2 {
         Map<String, Object> params = Lang.obj2map(wxPayCoupon);
         return this.postPay(url, key, params, file, password);
     }
+    
+    @Override
+    public NutMap query_payment(String out_trade_no){
+    	String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+
+    	WxPayUnifiedOrder wxPayUnifiedOrder = new WxPayUnifiedOrder();
+		wxPayUnifiedOrder.setAppid(appid);
+		wxPayUnifiedOrder.setMch_id(mchid);
+		wxPayUnifiedOrder.setOut_trade_no(out_trade_no);
+		wxPayUnifiedOrder.setNonce_str(R.UU32());
+    	Map<String, Object> params = Lang.obj2map(wxPayUnifiedOrder);
+        return this.postPay(url, apikey, params);
+    }
+
+	@Override
+	public NutMap get_pay_jsapi_args(String body, String openid, String ip, String out_trade_no, int total_fee) {
+		WxPayUnifiedOrder wxPayUnifiedOrder = new WxPayUnifiedOrder();
+		wxPayUnifiedOrder.setAppid(appid);
+		wxPayUnifiedOrder.setMch_id(mchid);
+		wxPayUnifiedOrder.setBody(body);
+		wxPayUnifiedOrder.setOut_trade_no(out_trade_no);
+		wxPayUnifiedOrder.setTotal_fee(total_fee);
+		wxPayUnifiedOrder.setSpbill_create_ip(ip);
+		wxPayUnifiedOrder.setNotify_url(paynotifyurl);
+		wxPayUnifiedOrder.setTrade_type("JSAPI");
+		wxPayUnifiedOrder.setOpenid(openid);
+
+		return this.pay_jsapi(apikey, wxPayUnifiedOrder);
+	}
+
+	@Override
+	public boolean is_sign_correct(NutMap map) {
+		String ret_sign = map.getString("sign");
+		String sign = WxPaySign.createSign(apikey, map);
+		return sign.equals(ret_sign);
+	}
 }
