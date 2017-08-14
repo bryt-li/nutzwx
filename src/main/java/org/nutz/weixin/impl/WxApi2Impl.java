@@ -815,6 +815,7 @@ public class WxApi2Impl extends AbstractWxApi2 {
 		WxPayUnifiedOrder wxPayUnifiedOrder = new WxPayUnifiedOrder();
 		wxPayUnifiedOrder.setAppid(appid);
 		wxPayUnifiedOrder.setMch_id(mchid);
+		wxPayUnifiedOrder.setNonce_str(R.UU32());
 		wxPayUnifiedOrder.setBody(body);
 		wxPayUnifiedOrder.setOut_trade_no(out_trade_no);
 		wxPayUnifiedOrder.setTotal_fee(total_fee);
