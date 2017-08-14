@@ -49,12 +49,12 @@ public class WxLoginImpl implements WxLogin {
     }
 
     @Override
-    public WxResp access_token(String code) {
+    public WxResp access_token(String auth_code) {
         Request req = Request.create("https://api.weixin.qq.com/sns/oauth2/access_token", METHOD.GET);
         NutMap params = new NutMap();
         params.put("appid", appid);
         params.put("secret", appsecret);
-        params.put("code", code);
+        params.put("code", auth_code);
         params.put("grant_type", "authorization_code");
         req.setParams(params);
         Response resp = Sender.create(req).send();
