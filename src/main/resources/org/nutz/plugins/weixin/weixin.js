@@ -12,7 +12,7 @@ var ioc = {
 	wxLogin : {
 		type : "org.nutz.weixin.impl.WxLoginImpl",
 		factory : "$conf#make",
-		args : ["org.nutz.weixin.impl.WxLoginImpl", "weixin."]
+		args : ["org.nutz.weixin.impl.WxLoginImpl", "wxlogin."]
 	},
 	wxAccessTokenStore : {
 		type : "org.nutz.weixin.spi.WxAccessTokenStore",
