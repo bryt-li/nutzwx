@@ -706,6 +706,7 @@ public class WxApi2Impl extends AbstractWxApi2 {
     public NutMap pay_unifiedorder(String key, WxPayUnifiedOrder wxPayUnifiedOrder) {
         String url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
         Map<String, Object> params = Lang.obj2map(wxPayUnifiedOrder);
+        System.out.println(Json.toJson(params));
         return this.postPay(url, key, params);
     }
 
