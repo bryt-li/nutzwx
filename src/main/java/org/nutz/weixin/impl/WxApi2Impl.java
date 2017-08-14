@@ -718,6 +718,8 @@ public class WxApi2Impl extends AbstractWxApi2 {
     @Override
     public NutMap pay_jsapi(String key, WxPayUnifiedOrder wxPayUnifiedOrder) {
         NutMap map = this.pay_unifiedorder(key, wxPayUnifiedOrder);
+        System.out.println(Json.toJson(map));
+        
         NutMap params = NutMap.NEW();
         params.put("appId", wxPayUnifiedOrder.getAppid());
         params.put("timeStamp", String.valueOf((int) (System.currentTimeMillis() / 1000)));
